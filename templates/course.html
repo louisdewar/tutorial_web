@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="course" data-lang="{{lang}}">
+  <h1 class="course-title">{{title}}</h1>
+  <section class="tutorials">
+  {% for tutorial in tutorials %}
+    {% include "tutorial.html" %}
+  {% endfor %}
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+title: My course
+lang: python3
+
+tutorials:
+  - subtitle: First tutorial
+    content: |
+      The first tutorial description. <br />
+      Here is some code:
+      ```python3
+      print("Hello I am some example code")
+      ```
+      Being able to bold is **very** important.
+
+      ## Try it
+
+      Test 123
+  - subtitle: Second tutorial
+    content: |
+      The second tutorial description. <br />
+      Here is some code:
+      ```python3
+      print("Hello I am some example code")
+      ```
+      Being able to bold is **very** important.
+
+      ## Try it
+
+      Test 123

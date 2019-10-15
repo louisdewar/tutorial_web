@@ -35,20 +35,58 @@ h1.course-title {
   margin-right: auto;
 
   margin-top: 30px;
-}
 
-article {
   background-color: white;
 
-  margin: 30px 20px;
-  max-width: 700px;
-  padding: 10px;
+  max-width: 600px;
 
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
   border-radius: 3px;
+
+  transition: background-color 200ms linear;
+}
+
+.tutorial.hide:hover {
+  background-color: #ddd;
+}
+
+.tutorial.hide .content {
+  display: none;
+}
+
+
+.tutorial .subtitle {
+  margin: 0;
+  padding: 20px;
+  cursor: pointer;
+  font-size: 30px;
+}
+
+.tutorial .content {
+  padding: 10px 20px;
+}
+
+.tutorial .content p:first-child {
+  margin-top: 0;
+}
+
+.tutorial p code {
+  background-color: #ecf0f1;
+  display: inline-block;
+
+  padding: 3px;
+}
+
+.tutorial pre code {
+  padding: 20px;
+  font-size: 15px;
 }
 
 body {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   margin: 0;
+}
+
+h1, h2, h3 {
+  font-family: 'Quicksand', sans-serif;
 }

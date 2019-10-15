@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8">
     <title>{% block title %}{{ title }} - Coderdojo{% endblock %}</title>
 
     <link rel="stylesheet" type="text/css" href="/static/main.css" />
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/nord.min.css" />
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat|Quicksand:300&display=swap" rel="stylesheet">
+
+    <script defer onload="hljs.initHighlightingOnLoad();" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
 
     {% block head %}{% endblock %}
   </head>

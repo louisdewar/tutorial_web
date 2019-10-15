@@ -6,6 +6,7 @@ use serde::{Deserialize, Deserializer, Serialize};
 pub struct Course {
     pub lang: String,
     pub title: String,
+    pub url: String,
     pub tutorials: Vec<Tutorial>,
 }
 

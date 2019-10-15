@@ -1,0 +1,55 @@
+title: Python introduction
+url: python_introduction
+lang: python
+
+tutorials:
+  - subtitle: Print statements
+    content: |
+      Whenever people learn a new programming language they tend to start by learning how to print `Hello World`.
+      So that's what we're going to do now.
+      Type out this code and run it.
+      ```python
+      print("Hello world")
+      ```
+
+      ## Challenge
+      Now that you can print `Hello World`, change it to say `Hello {your name here}`
+      (be sure to replace `{your_name_here}` with your name).
+  - subtitle: Variables
+    content: |
+      Variables are how we give names to data.
+      ```python
+      # Set my variable to "world" (notice the quotes ")
+      my_variable = "world"
+      # Print Hello {my_variable}
+      print("Hello " + my_variable)
+      ```
+      There's quite a lot going on here so let's break it down.
+
+      See those lines that start with `#`? Anything after that python ignores.
+      This is really useful for making *comments* about our code since we can type
+      anything we want there.
+
+      Next we have the quotation marks around `world`. This is because `"` says
+      that there is a **string** inside. A string is just a fancy way of saying text.
+
+      In this example we called our variable `my_variable`, but we could have called it anything.
+      As long as the variable starts with a letter or character and has no spaces its name will work.
+
+      Type out this example and see what happens.
+
+      ## Challenge
+
+      Create a variable called `my_name` and like above make a print statement to say `Hello {my_name}`.
+  - subtitle: Input
+    content: |
+      So far we have to manually put our name into the code.
+
+      Let's say that you want to give this program to your friends, right now
+      you would have to manually change the name each time.
+      What about if we could ask for their name when they run the program?
+
+      ```python
+      name = input("What is your name?")
+      print("Hello " + name)
+      ```

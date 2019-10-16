@@ -17,7 +17,7 @@ matrix:
 
     # OSX
     - env: TARGET=x86_64-apple-darwin
-      os: os
+      os: osx
 
     # Windows
     - env: TARGET=x86_64-pc-windows-gnu

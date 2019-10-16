@@ -2,7 +2,7 @@ mod build;
 mod templates;
 mod web;
 
-use clap::{App, AppSettings, Arg, SubCommand, crate_version};
+use clap::{crate_version, App, AppSettings, Arg, SubCommand};
 
 fn main() -> std::io::Result<()> {
     let matches = App::new("Tutorial Web Builder")

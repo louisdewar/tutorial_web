@@ -3,7 +3,7 @@
 ## Usage
 
 This is most likely what you need to know if you just want to use the tool.
-[See usage instructions](../USAGE.md)
+[See usage instructions](./USAGE.md)
 
 ## Building from source
 

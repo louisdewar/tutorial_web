@@ -1,6 +1,7 @@
 mod build;
 mod templates;
 mod web;
+mod common;
 
 use clap::{crate_version, App, AppSettings, Arg, SubCommand};
 

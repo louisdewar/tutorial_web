@@ -1,0 +1,14 @@
+title: Demonstrating assets
+url: demonstrating_assets
+
+tutorials:
+  - subtitle: How assets are found
+    content: |
+      When you create assets for a project you simply create a folder with the **same** name
+      as the name of the course (excluding `.yml`) and when the project is built
+      the assets will be placed in a directory `assets` relative to the location of the course.
+      What this means is that you can access any asset using the address `./assets/ASSET_NAME`.
+  - subtitle: Demonstration
+    content: |
+      Here is a [link to the asset](assets/dog.png).
+      Here is the image ![This is the alt text for an image of a dog](assets/dog.png).

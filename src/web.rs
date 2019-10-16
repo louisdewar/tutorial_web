@@ -12,7 +12,7 @@ fn render_course(state: web::Data<AppState>, req: HttpRequest) -> impl Responder
     if let (Some(topic), Some(name)) = (req.match_info().get("topic"), req.match_info().get("name"))
     {
         if let Some(path) = state.course_urls.get(&format!("{}/{}", topic, name)) {
-            match std::fs::read_to_string(path)
+            match std::fs::read_to_string(path.with_extension("yml"))
                 .map_err(|_| "Couldn't open and read file")
                 .and_then(|course_str| {
                     serde_yaml::from_str::<Course>(&course_str)
@@ -34,39 +34,39 @@ fn render_course(state: web::Data<AppState>, req: HttpRequest) -> impl Responder
     }
 }
 
-// Returns a hashmap of urls to path to course
-fn get_courses(course_folder: &str) -> std::io::Result<HashMap<String, PathBuf>> {
-    let mut urls = HashMap::new();
+fn serve_assets(state: web::Data<AppState>, req: HttpRequest) -> impl Responder {
+    // If our routes are setup correctly it should be impossible for this to fail
+    let topic = req
+        .match_info()
+        .get("topic")
+        .expect("Missing parameters from routes");
+    let name = req
+        .match_info()
+        .get("name")
+        .expect("Missing parameters from routes");
+    let asset_path = req
+        .match_info()
+        .get("asset_path")
+        .expect("Missing parameters from routes");
 
-    for course_group_entry in std::fs::read_dir(course_folder)? {
-        let course_group_folder = course_group_entry?.path();
-        if course_group_folder.is_dir() {
-            let course_group_name = course_group_folder
-                .file_name()
-                .expect("Couldn't extract course group from folder")
-                .to_os_string()
-                .into_string()
-                .unwrap();
+    if let Some(mut path) = state
+        .course_urls
+        .get(&format!("{}/{}", topic, name))
+        .cloned()
+    {
+        // It is likely possible for an attacker to use this to preform a reverse traversal attack
+        // another reason why this code should only be used for local testing
+        path.push(asset_path);
 
-            for course_entry in std::fs::read_dir(course_group_folder)? {
-                let course_path = course_entry?.path();
+        println!("{:?}", path);
 
-                if let Some("yml") = course_path.extension().and_then(std::ffi::OsStr::to_str) {
-                    let course_str = std::fs::read_to_string(course_path.clone())
-                        .expect("Couldn't open and read course file");
-                    let course = serde_yaml::from_str::<Course>(&course_str)
-                        .expect("Couldn't parse yaml file");
-
-                    urls.insert(
-                        format!("{}/{}", course_group_name.clone(), course.url),
-                        course_path,
-                    );
-                }
-            }
+        match fs::NamedFile::open(path) {
+            Ok(file) => Either::A(file),
+            Err(_) => Either::B(HttpResponse::NotFound().body("Couldn't find/open the file")),
         }
+    } else {
+        Either::B(HttpResponse::NotFound().body("The url course wasn't found, if you have recently created the file try restarting the server"))
     }
-
-    Ok(urls)
 }
 
 #[derive(Clone)]
@@ -75,7 +75,7 @@ struct AppState {
 }
 
 pub fn start_server(static_folder: String, course_folder: &str) -> std::io::Result<()> {
-    let course_urls = get_courses(course_folder)?;
+    let course_urls = crate::common::get_courses(course_folder)?;
 
     if course_urls.is_empty() {
         println!("Could find any files");
@@ -85,7 +85,7 @@ pub fn start_server(static_folder: String, course_folder: &str) -> std::io::Resu
     println!("Loaded the following files:");
 
     for (i, url) in course_urls.keys().enumerate() {
-        println!("{}. http://127.0.0.1:8000/course/{}.html", i + 1, url);
+        println!("{}. http://127.0.0.1:8000/course/{}/index.html", i + 1, url);
     }
 
     println!(
@@ -107,7 +107,8 @@ If you edit a course which is listed here you must simply reload the webpage to 
             // enable logger
             .wrap(middleware::Logger::default())
             .register_data(web::Data::new(app_state.clone()))
-            .service(web::resource("/course/{topic}/{name}.html").to(render_course))
+            .service(web::resource("/course/{topic}/{name}/index.html").to(render_course))
+            .service(web::resource("/course/{topic}/{name}/assets/{asset_path:.*}").to(serve_assets))
             .service(fs::Files::new("/static", static_folder.clone()).show_files_listing())
     })
     .bind("127.0.0.1:8000")

@@ -4,7 +4,6 @@ use serde::{Deserialize, Deserializer, Serialize};
 #[derive(Debug, Serialize, Deserialize, Template, Clone)]
 #[template(path = "course.html", escape = "none")]
 pub struct Course {
-    pub lang: String,
     pub title: String,
     pub url: String,
     pub tutorials: Vec<Tutorial>,

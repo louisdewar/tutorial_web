@@ -3,6 +3,9 @@ url: python_introduction
 lang: python
 
 tutorials:
+  - subtitle: Explanation
+    content: |
+      This tutorial is intended to serve as a demonstration of what's possible with this program.
   - subtitle: Print statements
     content: |
       Whenever people learn a new programming language they tend to start by learning how to print `Hello World`.

@@ -1,34 +1,39 @@
 h1.course-title {
-  background-color: #60a3bc;
-  color: white;
+  color: black;
+  opacity: 0.4;
 
   position: fixed;
   top: 0; left: 0; right: 0;
 
   margin: 0;
   padding: 10px;
+  padding-top: 50px;
 
-  box-shadow: 0 -1px 4px #444;
+  text-align: center;
 
-  z-index: 10;
+  user-select: none;
+
+  z-index: 0;
 }
 
 .course {
-  background-color: #82ccdd;
+  background-color: #2ecc71;
 
   padding: 0;
+  padding-top: 50px;
   margin: 0;
   min-height: 100vh;
 }
 
 .tutorials {
-  z-index: 0;
+  z-index: 1;
 
   padding: 20px 30px;
   padding-top: 80px;
 }
 
 .tutorial {
+  position: relative;
   display: block;
 
   margin-left: auto;
@@ -60,6 +65,7 @@ h1.course-title {
   padding: 20px;
   cursor: pointer;
   font-size: 30px;
+  user-select: none;
 }
 
 .tutorial .content {

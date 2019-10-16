@@ -19,8 +19,9 @@ main() {
 
     cross rustc --target $TARGET --release -- -C lto
 
-    cp target/$TARGET/release/tutorial_web $stage/
+    cp target/$TARGET/release/tutorial_web $stage/ || cp target/$TARGET/release/tutorial_web.exe $stage
     cp -r static $stage/
+    cp USAGE.md $stage/
 
     cd $stage
     tar czf $src/$CRATE_NAME-$TRAVIS_TAG-$TARGET.tar.gz *

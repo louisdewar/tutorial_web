@@ -85,7 +85,7 @@ pub fn start_server(static_folder: String, course_folder: &str) -> std::io::Resu
     println!("Loaded the following files:");
 
     for (i, url) in course_urls.keys().enumerate() {
-        println!("{}. http://127.0.0.1:8000/course/{}", i + 1, url);
+        println!("{}. http://127.0.0.1:8000/course/{}.html", i + 1, url);
     }
 
     println!(
@@ -107,7 +107,7 @@ If you edit a course which is listed here you must simply reload the webpage to 
             // enable logger
             .wrap(middleware::Logger::default())
             .register_data(web::Data::new(app_state.clone()))
-            .service(web::resource("/course/{topic}/{name}").to(render_course))
+            .service(web::resource("/course/{topic}/{name}.html").to(render_course))
             .service(fs::Files::new("/static", static_folder.clone()).show_files_listing())
     })
     .bind("127.0.0.1:8000")

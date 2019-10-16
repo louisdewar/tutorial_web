@@ -2,12 +2,13 @@ mod build;
 mod templates;
 mod web;
 
-use clap::{App, AppSettings, Arg, SubCommand};
+use clap::{App, AppSettings, Arg, SubCommand, crate_version};
 
 fn main() -> std::io::Result<()> {
     let matches = App::new("Tutorial Web Builder")
         .author("Author: Louis de Wardt")
         .about("Converts yaml files into html websites")
+        .version(crate_version!())
         .setting(AppSettings::ArgRequiredElseHelp)
         .subcommand(
             SubCommand::with_name("start-test-server")

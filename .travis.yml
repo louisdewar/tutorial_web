@@ -1,0 +1,65 @@
+# Based on the "trust" template v0.1.2
+# https://github.com/japaric/trust/tree/v0.1.2
+
+dist: trusty
+language: rust
+services: docker
+sudo: required
+
+env:
+  global:
+    - CRATE_NAME=tutorial_web
+
+matrix:
+  include:
+    # Linux
+    - env: TARGET=x86_64-unknown-linux-musl
+
+    # OSX
+    - env: TARGET=x86_64-apple-darwin
+      os: os
+
+    # Windows
+    - env: TARGET=x86_64-pc-windows-gnu
+
+before_install:
+  - set -e
+  - rustup self update
+
+install:
+  - sh ci/install.sh
+  - source ~/.cargo/env || true
+
+script:
+  - bash ci/script.sh
+
+after_script: set +e
+
+before_deploy:
+  - sh ci/before_deploy.sh
+
+deploy:
+  api_key:
+    secure: "d7R0v+Pha4Bj/CJlenvumqozUXLTd3KgPKl+1KQczdJlcwY07v2s+rNgz5VzrUgxZoTCIJ3cgQce2uX7QILzHosDUqnVd7c/j7OicHZs9NiLpnI3gKE0CxC9FBu+q5AEdGuhZbb647AbnyowCP9UrCtz9uUI+iyc4jZnQrb27SXU0gHxhEC7EgejZI1BO91ADOs32039ctwoEk/Ciidq0BvMyJ6JnFmXwEgekBGR3SbdtTMb/lOzCAAGwm3Xw+rbRsajU3TUrIqMK+BJ5mNilxUPqEDUd4NWJLo40x9y6hxL8eVhmyM1RJ4KaJBh8gWxITwFK9fTSNIsdr0sqLBl4rnpai9kjxafHQbL4s6rtHdIjoye1kK1b/AtNMJ9w87zqSjRjt89JsHdgk1t7i7zO+Vsacl/lKKsmAFDghUTlsY/vXTBA9UXh8M+tLdg0IbWVXZzSF1yeoajG6HkR2BbxdORn8uEyYyJjLgXs3owaELkntzjTwkb1zGpvHzjMvHgiJ5nmPB4PtXRfaPR4Plbsd4+y3tDcZibUrsP79E10reFs3knBRAYfJbumuPSGBAI/apqIEryuyqC1/FoILjMPQ6qYFZNDu/JbPUMtsQbSg8Pl6EM0YAL1TBi23DRmtOXboW6nvF0hkPQyXVCOus+iIsZIUOY9NYZic11cOC5DMw="
+  file_glob: true
+  file:
+    - $CRATE_NAME-$TRAVIS_TAG-$TARGET.*
+  on:
+    tags: true
+  provider: releases
+  skip_cleanup: true
+
+cache: cargo
+before_cache:
+  # Travis can't cache files that are not readable by "others"
+  - chmod -R a+r $HOME/.cargo
+
+branches:
+  only:
+    # release tags
+    - /^v\d+\.\d+\.\d+.*$/
+    - master
+
+notifications:
+  email:
+    on_success: never

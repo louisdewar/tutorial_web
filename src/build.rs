@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::fs;
 use std::io;
 use std::io::Write;
@@ -8,36 +7,29 @@ use askama::Template;
 
 use crate::templates::Course;
 
-pub fn build_html<P: AsRef<Path>>(input: P, static_files: P, output: P) -> io::Result<()> {
-    let mut course_paths: HashMap<String, Vec<Course>> = HashMap::new();
+fn copy_dir(input: &Path, output: &Path) -> io::Result<()> {
+    use walkdir::WalkDir;
 
-    for course_group_entry in fs::read_dir(input)? {
-        let course_group_folder = course_group_entry?.path();
-        if course_group_folder.is_dir() {
-            let course_group_name = course_group_folder
-                .file_name()
-                .expect("Couldn't extract course group from folder")
-                .to_os_string()
-                .into_string()
-                .unwrap();
+    fs::create_dir_all(output)?;
 
-            for tutorial_entry in fs::read_dir(course_group_folder)? {
-                let tutorial_path = tutorial_entry?.path();
+    for entry in WalkDir::new(input) {
+        let path = entry?.path().to_owned();
 
-                if let Some("yml") = tutorial_path.extension().and_then(std::ffi::OsStr::to_str) {
-                    let course_str = std::fs::read_to_string(tutorial_path)
-                        .expect("Couldn't open and read course file");
-                    let course = serde_yaml::from_str::<Course>(&course_str)
-                        .expect("Couldn't parse yaml file");
+        if path.is_file() {
+            let rel_path = path
+                .strip_prefix(input)
+                .expect("Couldn't get relative path");
 
-                    course_paths
-                        .entry(course_group_name.clone())
-                        .or_insert_with(|| vec![])
-                        .push(course);
-                }
-            }
+            // Copy files from input static to output
+            std::fs::copy(path.clone(), output.join(rel_path))?;
         }
     }
+
+    Ok(())
+}
+
+pub fn build_html<P: AsRef<Path>>(input: P, static_files: P, output: P) -> io::Result<()> {
+    let course_paths = crate::common::get_courses(input)?;
 
     // Delete existing output files
     if output.as_ref().is_dir() {
@@ -46,37 +38,31 @@ pub fn build_html<P: AsRef<Path>>(input: P, static_files: P, output: P) -> io::R
 
     let course_dir = output.as_ref().join("course");
 
-    for (course_group_name, courses) in course_paths {
-        let course_group_dir = course_dir.join(course_group_name);
+    // rel_path is {course_group_name}/{course_url_name}
+    for (rel_path, course_path) in course_paths {
+        fs::create_dir_all(course_dir.join(rel_path.clone()))?;
 
-        fs::create_dir_all(course_group_dir.clone())?;
+        let course_str = std::fs::read_to_string(course_path.with_extension("yml"))
+            .expect("Couldn't open and read course file");
+        let course = serde_yaml::from_str::<Course>(&course_str).expect("Couldn't parse yaml file");
 
-        for course in courses {
-            let html = course.render().expect("Couldn't render course");
+        let html = course.render().expect("Couldn't render course");
 
-            let mut file = fs::File::create(course_group_dir.join(format!("{}.html", course.url)))?;
-            file.write_all(html.as_bytes())?;
+        let mut file = fs::File::create(course_dir.join(format!("{}/index.html", rel_path)))?;
+        file.write_all(html.as_bytes())?;
+
+        // This directory is the assets folder
+        if course_path.is_dir() {
+            copy_dir(
+                &course_path,
+                &course_dir.join(format!("{}/assets", rel_path)),
+            )?;
         }
     }
-
-    use walkdir::WalkDir;
 
     let static_output = output.as_ref().join("static");
 
-    fs::create_dir_all(static_output.clone())?;
-
-    for entry in WalkDir::new(static_files.as_ref()) {
-        let path = entry?.path().to_owned();
-
-        if path.is_file() {
-            let rel_path = path
-                .strip_prefix(static_files.as_ref())
-                .expect("Couldn't get relative path");
-
-            // Copy files from input static to output
-            std::fs::copy(path.clone(), static_output.join(rel_path))?;
-        }
-    }
+    copy_dir(static_files.as_ref(), &static_output)?;
 
     println!("Built to {:?}", output.as_ref());
 

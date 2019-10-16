@@ -76,7 +76,8 @@ h1.course-title {
   margin-top: 0;
 }
 
-.tutorial p code {
+/* Target all inline code blocks (pre code is for longer blocks) */
+.tutorial :not(pre) > code {
   background-color: #ecf0f1;
   display: inline-block;
 

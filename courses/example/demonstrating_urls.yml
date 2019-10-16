@@ -1,0 +1,23 @@
+title: Demonstrating urls
+# Notice that the url for this file is different from the filename
+url: urls
+
+tutorials:
+  - subtitle: How urls are processed on the server
+    content: |
+      On the **server** a scan is done at the start for all courses.
+      It then saves the url field and serves the file under `{course_group}/{url}/index.html`.
+      If the url field is changed after the server is running it will not be updated,
+      but if any content of a course is changed it will be updated on a browser refresh.
+  - subtitle: How urls are processed during building
+    content: |
+      It is much like the server in the fact that the file name is irrelevent.
+  - subtitle: How are assets handled?
+    content: |
+      Since you only ever reference assets by relative paths it shouldn't matter,
+      but if you want to know the folder structure is like this:
+      `{url}`:
+        - `index.html`
+        - `assets/{all the files that used to be in the folder named with the same name as this file (excluding the .yml)}`
+
+      Notice how [this link](assets/dog.png) magically works despite the different in url name.

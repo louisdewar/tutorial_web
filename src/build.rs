@@ -5,7 +5,7 @@ use std::path::Path;
 
 use askama::Template;
 
-use crate::templates::Course;
+use crate::templates::{Course, Page};
 
 fn copy_dir(input: &Path, output: &Path) -> io::Result<()> {
     use walkdir::WalkDir;
@@ -28,7 +28,12 @@ fn copy_dir(input: &Path, output: &Path) -> io::Result<()> {
     Ok(())
 }
 
-pub fn build_html<P: AsRef<Path>>(input: P, static_files: P, output: P) -> io::Result<()> {
+pub fn build_html<P: AsRef<Path>>(
+    input: P,
+    static_files: P,
+    output: P,
+    base_url: String,
+) -> io::Result<()> {
     let course_paths = crate::common::get_courses(input)?;
 
     // Delete existing output files
@@ -45,8 +50,12 @@ pub fn build_html<P: AsRef<Path>>(input: P, static_files: P, output: P) -> io::R
         let course_str = std::fs::read_to_string(course_path.with_extension("yml"))
             .expect("Couldn't open and read course file");
         let course = serde_yaml::from_str::<Course>(&course_str).expect("Couldn't parse yaml file");
+        let page = Page {
+            base_url: base_url.clone(),
+            course,
+        };
 
-        let html = course.render().expect("Couldn't render course");
+        let html = page.render().expect("Couldn't render course");
 
         let mut file = fs::File::create(course_dir.join(format!("{}/index.html", rel_path)))?;
         file.write_all(html.as_bytes())?;

@@ -1,8 +1,14 @@
 use askama::Template;
 use serde::{Deserialize, Deserializer, Serialize};
 
-#[derive(Debug, Serialize, Deserialize, Template, Clone)]
+#[derive(Template, Clone)]
 #[template(path = "course.html", escape = "none")]
+pub struct Page {
+    pub base_url: String,
+    pub course: Course,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Course {
     pub title: String,
     pub url: String,

@@ -6,7 +6,7 @@ use actix_web::{middleware, web, App, Either, HttpRequest, HttpResponse, HttpSer
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-use crate::templates::Course;
+use crate::templates::{Course, Page};
 
 fn render_course(state: web::Data<AppState>, req: HttpRequest) -> impl Responder {
     if let (Some(topic), Some(name)) = (req.match_info().get("topic"), req.match_info().get("name"))
@@ -19,8 +19,12 @@ fn render_course(state: web::Data<AppState>, req: HttpRequest) -> impl Responder
                         .map_err(|_| "Couldn't parse yaml file")
                 })
                 .and_then(|course| {
-                    course
-                        .render()
+                    let page = Page {
+                        base_url: "".to_string(),
+                        course,
+                    };
+
+                    page.render()
                         .map_err(|_| "Couldn't render course into html")
                 }) {
                 Ok(result) => Either::A(HttpResponse::Ok().body(result)),

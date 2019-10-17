@@ -1,4 +1,9 @@
 name: Rustfmt
+
+on: push
+
+jobs:
+  fmt:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources

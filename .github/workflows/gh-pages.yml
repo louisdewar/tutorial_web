@@ -1,0 +1,25 @@
+# Note the courses contained in this repo are only examples
+# and this is a demonstration of how to deploy them
+name: Deploy to GH pages
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    # This builds both the binary and the website
+    - name: Build
+      uses: actions-rs/cargo@v1
+          with:
+            command: run -- build -i courses -s static -o build
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v2.5.0
+      env:
+        ACTIONS_DEPLOY_KEY: ${{ secrets.DEPLOY_PAGES_TOKEN }}
+        PUBLISH_BRANCH: gh-pages
+        PUBLISH_DIR: ./build

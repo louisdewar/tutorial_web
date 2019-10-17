@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Python introduction - Coderdojo</title>
+
+    <link rel="stylesheet" type="text/css" href="/static/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/nord.min.css" />
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat|Quicksand:300&display=swap" rel="stylesheet">
+
+    <script defer onload="hljs.initHighlightingOnLoad();" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+
+    
+  </head>
+  <body>
+    <div id="content">
+      
+<div class="course">
+  <h1 class="course-title">Python introduction</h1>
+  <section class="tutorials">
+  
+    <article class="tutorial" data-index="1">
+  <h2 class="subtitle">1. Explanation</h2>
+  <div class="content"><p>This tutorial is intended to serve as a demonstration of what's possible with this program.</p>
+</div>
+</article>
+  
+    <article class="tutorial" data-index="2">
+  <h2 class="subtitle">2. Print statements</h2>
+  <div class="content"><p>Whenever people learn a new programming language they tend to start by learning how to print <code>Hello World</code>.
+So that's what we're going to do now.
+Type out this code and run it.</p>
+<pre><code class="language-python">print(&quot;Hello world&quot;)
+</code></pre>
+<h2>Challenge</h2>
+<p>Now that you can print <code>Hello World</code>, change it to say <code>Hello {your name here}</code>
+(be sure to replace <code>{your_name_here}</code> with your name).</p>
+</div>
+</article>
+  
+    <article class="tutorial" data-index="3">
+  <h2 class="subtitle">3. Variables</h2>
+  <div class="content"><p>Variables are how we give names to data.</p>
+<pre><code class="language-python"># Set my variable to &quot;world&quot; (notice the quotes &quot;)
+my_variable = &quot;world&quot;
+# Print Hello {my_variable}
+print(&quot;Hello &quot; + my_variable)
+</code></pre>
+<p>There's quite a lot going on here so let's break it down.</p>
+<p>See those lines that start with <code>#</code>? Anything after that python ignores.
+This is really useful for making <em>comments</em> about our code since we can type
+anything we want there.</p>
+<p>Next we have the quotation marks around <code>world</code>. This is because <code>&quot;</code> says
+that there is a <strong>string</strong> inside. A string is just a fancy way of saying text.</p>
+<p>In this example we called our variable <code>my_variable</code>, but we could have called it anything.
+As long as the variable starts with a letter or character and has no spaces its name will work.</p>
+<p>Type out this example and see what happens.</p>
+<h2>Challenge</h2>
+<p>Create a variable called <code>my_name</code> and like above make a print statement to say <code>Hello {my_name}</code>.</p>
+</div>
+</article>
+  
+    <article class="tutorial" data-index="4">
+  <h2 class="subtitle">4. Input</h2>
+  <div class="content"><p>So far we have to manually put our name into the code.</p>
+<p>Let's say that you want to give this program to your friends, right now
+you would have to manually change the name each time.
+What about if we could ask for their name when they run the program?</p>
+<pre><code class="language-python">name = input(&quot;What is your name?&quot;)
+print(&quot;Hello &quot; + name)
+</code></pre>
+</div>
+</article>
+  
+  </section>
+</div>
+
+    </div>
+
+    <script src="/static/main.js"></script>
+  </body>
+</html>

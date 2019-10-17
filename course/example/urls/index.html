@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Demonstrating urls - Coderdojo</title>
+
+    <link rel="stylesheet" type="text/css" href="/static/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/nord.min.css" />
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat|Quicksand:300&display=swap" rel="stylesheet">
+
+    <script defer onload="hljs.initHighlightingOnLoad();" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+
+    
+  </head>
+  <body>
+    <div id="content">
+      
+<div class="course">
+  <h1 class="course-title">Demonstrating urls</h1>
+  <section class="tutorials">
+  
+    <article class="tutorial" data-index="1">
+  <h2 class="subtitle">1. How urls are processed on the server</h2>
+  <div class="content"><p>On the <strong>server</strong> a scan is done at the start for all courses.
+It then saves the url field and serves the file under <code>{course_group}/{url}/index.html</code>.
+If the url field is changed after the server is running it will not be updated,
+but if any content of a course is changed it will be updated on a browser refresh.</p>
+</div>
+</article>
+  
+    <article class="tutorial" data-index="2">
+  <h2 class="subtitle">2. How urls are processed during building</h2>
+  <div class="content"><p>It is much like the server in the fact that the file name is irrelevent.</p>
+</div>
+</article>
+  
+    <article class="tutorial" data-index="3">
+  <h2 class="subtitle">3. How are assets handled?</h2>
+  <div class="content"><p>Since you only ever reference assets by relative paths it shouldn't matter,
+but if you want to know the folder structure is like this:
+<code>{url}</code>:</p>
+<ul>
+<li><code>index.html</code></li>
+<li><code>assets/{all the files that used to be in the folder named with the same name as this file (excluding the .yml)}</code></li>
+</ul>
+<p>Notice how <a href="assets/dog.png">this link</a> magically works despite the different url name.</p>
+</div>
+</article>
+  
+  </section>
+</div>
+
+    </div>
+
+    <script src="/static/main.js"></script>
+  </body>
+</html>

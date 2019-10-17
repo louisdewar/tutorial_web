@@ -1,0 +1,99 @@
+h1.course-title {
+  color: black;
+  opacity: 0.4;
+
+  position: fixed;
+  top: 0; left: 0; right: 0;
+
+  margin: 0;
+  padding: 10px;
+  padding-top: 50px;
+
+  text-align: center;
+
+  user-select: none;
+
+  z-index: 0;
+}
+
+.course {
+  background-color: #2ecc71;
+
+  padding: 0;
+  padding-top: 50px;
+  margin: 0;
+  min-height: 100vh;
+}
+
+.tutorials {
+  z-index: 1;
+
+  padding: 20px 30px;
+  padding-top: 80px;
+}
+
+.tutorial {
+  position: relative;
+  display: block;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  margin-top: 30px;
+
+  background-color: white;
+
+  max-width: 600px;
+
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  border-radius: 3px;
+
+  transition: background-color 200ms linear;
+}
+
+.tutorial.hide:hover {
+  background-color: #ddd;
+}
+
+.tutorial.hide .content {
+  display: none;
+}
+
+
+.tutorial .subtitle {
+  margin: 0;
+  padding: 20px;
+  cursor: pointer;
+  font-size: 30px;
+  user-select: none;
+}
+
+.tutorial .content {
+  padding: 10px 20px;
+}
+
+.tutorial .content p:first-child {
+  margin-top: 0;
+}
+
+/* Target all inline code blocks (pre code is for longer blocks) */
+.tutorial :not(pre) > code {
+  background-color: #ecf0f1;
+  display: inline-block;
+
+  padding: 3px;
+}
+
+.tutorial pre code {
+  padding: 20px;
+  font-size: 15px;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+}
+
+h1, h2, h3 {
+  font-family: 'Quicksand', sans-serif;
+}

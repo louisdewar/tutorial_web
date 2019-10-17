@@ -15,8 +15,8 @@ jobs:
     # This builds both the binary and the website
     - name: Build
       uses: actions-rs/cargo@v1
-          with:
-            command: run -- build -i courses -s static -o build
+      with:
+        command: run -- build -i courses -s static -o build
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v2.5.0
       env:

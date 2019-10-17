@@ -108,7 +108,9 @@ If you edit a course which is listed here you must simply reload the webpage to 
             .wrap(middleware::Logger::default())
             .register_data(web::Data::new(app_state.clone()))
             .service(web::resource("/course/{topic}/{name}/index.html").to(render_course))
-            .service(web::resource("/course/{topic}/{name}/assets/{asset_path:.*}").to(serve_assets))
+            .service(
+                web::resource("/course/{topic}/{name}/assets/{asset_path:.*}").to(serve_assets),
+            )
             .service(fs::Files::new("/static", static_folder.clone()).show_files_listing())
     })
     .bind("127.0.0.1:8000")

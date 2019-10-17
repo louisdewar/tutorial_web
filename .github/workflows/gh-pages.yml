@@ -21,7 +21,8 @@ jobs:
     - name: Build
       uses: actions-rs/cargo@v1
       with:
-        command: run -- build -i courses -s static -o build
+        command: run
+        args: -- build -i courses -s static -o build
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v2.5.0
       env:

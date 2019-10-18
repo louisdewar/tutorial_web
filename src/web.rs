@@ -11,7 +11,11 @@ use crate::templates::{Course, Page};
 fn render_course(state: web::Data<AppState>, req: HttpRequest) -> impl Responder {
     if let (Some(topic), Some(name)) = (req.match_info().get("topic"), req.match_info().get("name"))
     {
-        if let Some(path) = state.course_urls.get(&format!("{}/{}", topic, name)) {
+        if let Some(path) = state
+            .course_urls
+            .get(topic)
+            .and_then(|course_groups| course_groups.get(name))
+        {
             match std::fs::read_to_string(path.with_extension("yml"))
                 .map_err(|_| "Couldn't open and read file")
                 .and_then(|course_str| {
@@ -55,7 +59,8 @@ fn serve_assets(state: web::Data<AppState>, req: HttpRequest) -> impl Responder 
 
     if let Some(mut path) = state
         .course_urls
-        .get(&format!("{}/{}", topic, name))
+        .get(topic)
+        .and_then(|course_group| course_group.get(name))
         .cloned()
     {
         // It is likely possible for an attacker to use this to preform a reverse traversal attack
@@ -75,7 +80,7 @@ fn serve_assets(state: web::Data<AppState>, req: HttpRequest) -> impl Responder 
 
 #[derive(Clone)]
 struct AppState {
-    pub course_urls: HashMap<String, PathBuf>,
+    pub course_urls: HashMap<String, HashMap<String, PathBuf>>,
 }
 
 pub fn start_server(static_folder: String, course_folder: &str) -> std::io::Result<()> {
@@ -88,8 +93,16 @@ pub fn start_server(static_folder: String, course_folder: &str) -> std::io::Resu
 
     println!("Loaded the following files:");
 
-    for (i, url) in course_urls.keys().enumerate() {
-        println!("{}. http://127.0.0.1:8000/course/{}/index.html", i + 1, url);
+    for (group_name, courses) in &course_urls {
+        println!("==={}===", group_name);
+        for (i, course_name) in courses.keys().enumerate() {
+            println!(
+                "{}. http://127.0.0.1:8000/course/{}/{}/index.html",
+                i + 1,
+                group_name,
+                course_name
+            );
+        }
     }
 
     println!(

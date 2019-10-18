@@ -4,8 +4,10 @@ use std::path::{Path, PathBuf};
 use crate::templates::Course;
 
 /// Returns a hashmap of urls to path to course (excluding the .yml)
-pub fn get_courses<P: AsRef<Path>>(course_folder: P) -> std::io::Result<HashMap<String, PathBuf>> {
-    let mut urls = HashMap::new();
+pub fn get_courses<P: AsRef<Path>>(
+    course_folder: P,
+) -> std::io::Result<HashMap<String, HashMap<String, PathBuf>>> {
+    let mut course_groups = HashMap::new();
 
     for course_group_entry in std::fs::read_dir(course_folder)? {
         let course_group_folder = course_group_entry?.path();
@@ -30,14 +32,14 @@ pub fn get_courses<P: AsRef<Path>>(course_folder: P) -> std::io::Result<HashMap<
                     let path = std::path::Path::new(course_path.parent().unwrap())
                         .join(course_path.file_stem().unwrap());
 
-                    urls.insert(
-                        format!("{}/{}", course_group_name.clone(), course.url),
-                        path,
-                    );
+                    course_groups
+                        .entry(course_group_name.clone())
+                        .or_insert_with(HashMap::new)
+                        .insert(course.url, path);
                 }
             }
         }
     }
 
-    Ok(urls)
+    Ok(course_groups)
 }

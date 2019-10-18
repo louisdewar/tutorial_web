@@ -1,5 +1,6 @@
 use askama::Template;
 use serde::{Deserialize, Deserializer, Serialize};
+use std::collections::HashMap;
 
 #[derive(Template, Clone)]
 #[template(path = "course.html", escape = "none")]
@@ -13,6 +14,13 @@ pub struct Course {
     pub title: String,
     pub url: String,
     pub tutorials: Vec<Tutorial>,
+}
+
+#[derive(Template, Clone)]
+#[template(path = "home.html", escape = "none")]
+pub struct Home {
+    pub base_url: String,
+    pub course_groups: HashMap<String, HashMap<String, Course>>,
 }
 
 fn apply_markdown<'de, D>(deserializer: D) -> Result<String, D::Error>

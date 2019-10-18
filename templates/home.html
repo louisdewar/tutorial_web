@@ -1,0 +1,16 @@
+{% block title %}Course listing{% endblock %}
+
+{% extends "base.html" %}
+
+{% block content %}
+{% for (course_group, courses) in course_groups %}
+<div class="course-group">
+  <h2>{{course_group}}</h2>
+  <ul>
+  {% for (course_name, course) in courses %}
+    <li><a href="course/{{course_group}}/{{course_name}}">{{course.title}}</a></li>
+  {% endfor %}
+  </ul>
+</div>
+{% endfor %}
+{% endblock %}

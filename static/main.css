@@ -32,6 +32,10 @@ h1.course-title {
   padding-top: 80px;
 }
 
+.tutorials img {
+  max-width: 100%;
+}
+
 .tutorial {
   position: relative;
   display: block;

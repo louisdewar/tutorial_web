@@ -35,7 +35,7 @@ pub fn build_html<P: AsRef<Path>>(
     output: P,
     base_url: String,
 ) -> io::Result<()> {
-    let course_groups_paths = crate::common::get_courses(input)?;
+    let course_groups_paths = crate::common::get_courses(input, true)?;
 
     // Delete existing output files
     if output.as_ref().is_dir() {

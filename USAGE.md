@@ -14,13 +14,11 @@ Open up a terminal and navigate to the folder where the binary named `tutorial_w
 
 Run `./tutorial_web --help`.
 
-If you get an error on mac saying that it can't be checked for malware then navigate to the folder in finder, right click on the binary then manually click open. Once you do this a terminal window will pop up, you can safely dismiss this and go back to your original terminal and re-run `./tutorial_web --help`.
+If you get an error on mac saying that it can't be checked for malware then navigate to the folder in finder, right click on the binary then manually click open. Once you do this a terminal window will pop up, you can safely dismiss this and go back to your original terminal and re-run `./tutorial_web --help`. You only have to do this once.
 
 ## Folder structure
 
-You need to your input folder for all of the courses.
-It can be called anything you want.
-I'm going to refer to it as `COURSE_FOLDER`.
+You need to create a folder for all of the courses. It can be called anything you want. I'm going to refer to it as `COURSE_FOLDER`.
 
 The structure for the course folder is `COURSE_FOLDER/LANGUAGE/COURSE_NAME.yml`.
 For an example see the folder `courses` in the repo for this project.

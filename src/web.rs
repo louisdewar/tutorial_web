@@ -84,7 +84,8 @@ struct AppState {
 }
 
 pub fn start_server(static_folder: String, course_folder: &str) -> std::io::Result<()> {
-    let course_urls = crate::common::get_courses(course_folder)?;
+    // Get courses in a non-strict way (if there is an error just skip)
+    let course_urls = crate::common::get_courses(course_folder, false)?;
 
     if course_urls.is_empty() {
         println!("Could find any files");

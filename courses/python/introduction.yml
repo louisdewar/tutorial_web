@@ -1,8 +1,15 @@
 title: Python introduction
 url: python_introduction
 
+# Optionally set the default settings for the tutorials
+tutorial_settings:
+  # By default all cards start open
+  start_closed: true
+
 tutorials:
   - subtitle: Explanation
+    # Override the default setting to have this card start as open
+    start_closed: false
     content: |
       This tutorial is intended to serve as a demonstration of what's possible with this program.
   - subtitle: Print statements

@@ -52,7 +52,11 @@ pub fn get_courses<P: AsRef<Path>>(
                     let course = match serde_yaml::from_str::<Course>(&course_str) {
                         Ok(c) => c,
                         Err(e) => {
-                            println!("{} ========= Unable to parse: {:?}", if strict_mode { "FATAL" } else { "WARNING" }, &course_path);
+                            println!(
+                                "{} ========= Unable to parse: {:?}",
+                                if strict_mode { "FATAL" } else { "WARNING" },
+                                &course_path
+                            );
                             display_parse_error(&course_str, e, &course_path);
 
                             if strict_mode {

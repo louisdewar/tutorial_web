@@ -1,7 +1,7 @@
 [package]
 name = "tutorial_web"
 version = "0.1.5"
-authors = ["Louis de Wardt <contact@louis.dewardt.uk>"]
+authors = ["Louis de Wardt"]
 edition = "2018"
 
 [dependencies]
@@ -12,5 +12,5 @@ pulldown-cmark = "0.6"
 actix-web = "1.0"
 actix-files = "0.1.6"
 env_logger = "0.7.0"
-clap = "2.33.0"
+clap = { version = "2.33", features = ["yaml"] }
 walkdir = "2"

@@ -1,6 +1,6 @@
 [package]
 name = "tutorial_web"
-version = "0.1.5"
+version = "0.1.6"
 authors = ["Louis de Wardt"]
 edition = "2018"
 

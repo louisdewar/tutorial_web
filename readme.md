@@ -4,6 +4,9 @@
 
 If you want to know how to use the tool see the [usage instructions](./USAGE.md).
 
+## Deployment
+There are example courses in the ./courses directory which are deployed to github pages [here](https://louisdewar.github.io/tutorial_web/).
+
 ## Building from source
 
 1. [Install rust](https://rustup.rs/)

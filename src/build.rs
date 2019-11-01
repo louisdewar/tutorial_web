@@ -16,11 +16,14 @@ fn copy_dir(input: &Path, output: &Path) -> io::Result<()> {
     for entry in WalkDir::new(input) {
         let path = entry?.path().to_owned();
 
-        if path.is_file() {
-            let rel_path = path
-                .strip_prefix(input)
-                .expect("Couldn't get relative path");
 
+        let rel_path = path
+            .strip_prefix(input)
+            .expect("Couldn't get relative path");
+
+        if path.is_dir() {
+            fs::create_dir_all(output.join(rel_path))?;
+        } else if path.is_file() {
             // Copy files from input static to output
             std::fs::copy(path.clone(), output.join(rel_path))?;
         }
@@ -91,7 +94,7 @@ pub fn build_html<P: AsRef<Path>>(
     // ==Handle static files==
     let static_output = output.as_ref().join("static");
 
-    copy_dir(static_files.as_ref(), &static_output)?;
+    copy_dir(static_files.as_ref(), &static_output).expect("Couldn't copy static files");
 
     // ==Handle home page==
 

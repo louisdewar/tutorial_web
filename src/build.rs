@@ -16,7 +16,6 @@ fn copy_dir(input: &Path, output: &Path) -> io::Result<()> {
     for entry in WalkDir::new(input) {
         let path = entry?.path().to_owned();
 
-
         let rel_path = path
             .strip_prefix(input)
             .expect("Couldn't get relative path");

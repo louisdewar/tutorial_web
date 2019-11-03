@@ -11,4 +11,5 @@ tutorials:
   - subtitle: Demonstration
     content: |
       Here is a [link to the asset](assets/dog.png).
+
       Here is the image ![This is the alt text for an image of a dog](assets/dog.png).

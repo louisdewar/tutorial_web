@@ -67,8 +67,6 @@ fn serve_assets(state: web::Data<AppState>, req: HttpRequest) -> impl Responder 
         // another reason why this code should only be used for local testing
         path.push(asset_path);
 
-        println!("{:?}", path);
-
         match fs::NamedFile::open(path) {
             Ok(file) => Either::A(file),
             Err(_) => Either::B(HttpResponse::NotFound().body("Couldn't find/open the file")),

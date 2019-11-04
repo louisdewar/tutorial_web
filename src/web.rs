@@ -6,7 +6,7 @@ use actix_web::{middleware, web, App, Either, HttpRequest, HttpResponse, HttpSer
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-use crate::templates::{Course, Page};
+use crate::templates::Page;
 
 fn render_course(state: web::Data<AppState>, req: HttpRequest) -> impl Responder {
     if let (Some(topic), Some(name)) = (req.match_info().get("topic"), req.match_info().get("name"))
@@ -17,10 +17,10 @@ fn render_course(state: web::Data<AppState>, req: HttpRequest) -> impl Responder
             .and_then(|course_groups| course_groups.get(name))
         {
             match std::fs::read_to_string(path.with_extension("yml"))
-                .map_err(|_| "Couldn't open and read file")
+                .map_err(|_| "Couldn't open and read file".to_string())
                 .and_then(|course_str| {
-                    serde_yaml::from_str::<Course>(&course_str)
-                        .map_err(|_| "Couldn't parse yaml file")
+                    crate::parse::parse_course(&course_str)
+                        .map_err(|err| format!("Couldn't parse yaml file: {}", err))
                 })
                 .and_then(|course| {
                     let page = Page {
@@ -29,16 +29,16 @@ fn render_course(state: web::Data<AppState>, req: HttpRequest) -> impl Responder
                     };
 
                     page.render()
-                        .map_err(|_| "Couldn't render course into html")
+                        .map_err(|_| "Couldn't render course into html".to_string())
                 }) {
                 Ok(result) => Either::A(HttpResponse::Ok().body(result)),
                 Err(msg) => Either::B(msg),
             }
         } else {
-            Either::B("The url course wasn't found, if you have recently created the file try restarting the server")
+            Either::B("The url course wasn't found, if you have recently created the file try restarting the server".to_string())
         }
     } else {
-        Either::B("Pass in the correct parameters")
+        Either::B("Pass in the correct parameters".to_string())
     }
 }
 
@@ -82,8 +82,19 @@ struct AppState {
 }
 
 pub fn start_server(static_folder: String, course_folder: &str) -> std::io::Result<()> {
+    use crate::common::{get_courses, CourseError};
     // Get courses in a non-strict way (if there is an error just skip)
-    let course_urls = crate::common::get_courses(course_folder, false)?;
+    let course_urls = match get_courses(course_folder, false) {
+        Ok(val) => val,
+        Err(CourseError::Io(err)) => return Err(err),
+        Err(CourseError::Parse(err)) => {
+            println!(
+                "Server intialisation failed because it couldn't load course files:\n{}",
+                err
+            );
+            std::process::exit(1);
+        }
+    };
 
     if course_urls.is_empty() {
         println!("Could find any files");

@@ -1,28 +1,44 @@
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
-use crate::templates::Course;
+use crate::parse::ParseError;
 
-use serde_yaml::Error;
+pub fn generate_error_message(mut output: &mut String, file: &str, err: ParseError) {
+    use std::fmt::Write;
 
-pub fn display_parse_error(file: &str, err: Error, path: &Path) {
-    if let Some(location) = err.location() {
-        println!("There was an error parsing the file {:?}", path);
-        print!(
-            "We think the error occured around line: {}, column {} ",
-            location.line(),
-            location.column()
-        );
-        println!(
-            "but it is possible the actual error is on a previous line and it was only detected here"
-        );
+    match err {
+        ParseError::YamlError(msg, Some(scan)) => {
+            let location = scan.marker();
 
-        let line = file.lines().nth(location.line() - 1).unwrap();
-        println!("{}", line);
-        println!("{: <1$}^^^", "", location.column() - 1);
-        println!("Error: {}", format!("{}", err));
-    } else {
-        println!("Got error: {:?}", err);
+            writeln!(
+                &mut output,
+                "We think the error occured around line: {}, column {} \
+but it is possible the actual error is on a previous line and it was only detected here.",
+                location.line(),
+                location.col()
+            )
+            .unwrap();
+
+            let line = file.lines().nth(location.line() - 1).unwrap();
+            writeln!(&mut output, "{}", line).unwrap();
+            writeln!(&mut output, "{: <1$}^^^", "", location.col()).unwrap();
+            writeln!(&mut output, "Error: {} ({})", msg, scan).unwrap();
+        }
+        _ => {
+            // Use the default display
+            writeln!(&mut output, "{}", err).unwrap();
+        }
+    }
+}
+
+pub enum CourseError {
+    Io(std::io::Error),
+    Parse(String),
+}
+
+impl From<std::io::Error> for CourseError {
+    fn from(err: std::io::Error) -> CourseError {
+        CourseError::Io(err)
     }
 }
 
@@ -30,7 +46,7 @@ pub fn display_parse_error(file: &str, err: Error, path: &Path) {
 pub fn get_courses<P: AsRef<Path>>(
     course_folder: P,
     strict_mode: bool,
-) -> std::io::Result<HashMap<String, HashMap<String, PathBuf>>> {
+) -> Result<HashMap<String, HashMap<String, PathBuf>>, CourseError> {
     let mut course_groups = HashMap::new();
 
     for course_group_entry in std::fs::read_dir(course_folder)? {
@@ -49,22 +65,23 @@ pub fn get_courses<P: AsRef<Path>>(
                 if let Some("yml") = course_path.extension().and_then(std::ffi::OsStr::to_str) {
                     let course_str = std::fs::read_to_string(course_path.clone())
                         .expect("Couldn't open and read course file");
-                    let course = match serde_yaml::from_str::<Course>(&course_str) {
+                    let course = match crate::parse::parse_course(&course_str) {
                         Ok(c) => c,
-                        Err(e) => {
-                            println!(
-                                "{} ========= Unable to parse: {:?}",
+                        Err(err) => {
+                            let mut msg = format!(
+                                "{} ========= Unable to parse: {:?}\n",
                                 if strict_mode { "FATAL" } else { "WARNING" },
                                 &course_path
                             );
-                            display_parse_error(&course_str, e, &course_path);
+
+                            generate_error_message(&mut msg, &course_str, err);
 
                             if strict_mode {
-                                // Exit the program (already printed error don't need to panic)
-                                ::std::process::exit(1);
+                                // Exit the program
+                                return Err(CourseError::Parse(msg));
                             } else {
-                                // Leave a gap after this error
-                                println!("\n");
+                                // Print the message and continue
+                                println!("{}\n", msg);
                                 continue;
                             }
                         }
@@ -74,10 +91,18 @@ pub fn get_courses<P: AsRef<Path>>(
                     let path = std::path::Path::new(course_path.parent().unwrap())
                         .join(course_path.file_stem().unwrap());
 
-                    course_groups
+                    // If a course already existed
+                    if course_groups
                         .entry(course_group_name.clone())
                         .or_insert_with(HashMap::new)
-                        .insert(course.url, path);
+                        .insert(course.url.clone(), path)
+                        .is_some()
+                    {
+                        return Err(CourseError::Parse(format!(
+                            "Two courses (in the same group) had the same url value of `{}/{}`",
+                            course_group_name, course.url
+                        )));
+                    }
                 }
             }
         }

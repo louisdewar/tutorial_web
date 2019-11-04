@@ -1,5 +1,6 @@
 mod build;
 mod common;
+mod parse;
 mod templates;
 mod web;
 

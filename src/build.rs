@@ -6,8 +6,10 @@ use std::path::Path;
 
 use askama::Template;
 
-use crate::templates::{Course, Home, Page};
+use crate::templates::{Home, Page};
 
+/// Copys the contents on the input directory to the output directory.
+/// It creates all folders in the output path if they don't exist.
 fn copy_dir(input: &Path, output: &Path) -> io::Result<()> {
     use walkdir::WalkDir;
 
@@ -31,13 +33,23 @@ fn copy_dir(input: &Path, output: &Path) -> io::Result<()> {
     Ok(())
 }
 
+/// Builds the output folder containing a copy of the static files and the HTML render of all the courses.
+/// Also builds an index page.
 pub fn build_html<P: AsRef<Path>>(
     input: P,
     static_files: P,
     output: P,
     base_url: String,
 ) -> io::Result<()> {
-    let course_groups_paths = crate::common::get_courses(input, true)?;
+    use crate::common::{get_courses, CourseError};
+    let course_groups_paths = match get_courses(input, true) {
+        Ok(courses) => courses,
+        Err(CourseError::Io(err)) => return Err(err),
+        Err(CourseError::Parse(msg)) => {
+            println!("Build process failed:\n{}", msg);
+            std::process::exit(1);
+        }
+    };
 
     // Delete existing output files
     if output.as_ref().is_dir() {
@@ -61,8 +73,7 @@ pub fn build_html<P: AsRef<Path>>(
 
             let course_str = std::fs::read_to_string(course_path.with_extension("yml"))
                 .expect("Couldn't open and read course file");
-            let course =
-                serde_yaml::from_str::<Course>(&course_str).expect("Couldn't parse yaml file");
+            let course = crate::parse::parse_course(&course_str).expect("Couldn't parse yaml file");
 
             // Append this course to the index
             course_index

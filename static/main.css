@@ -34,6 +34,8 @@ h1.course-title {
 
 .tutorials img {
   max-width: 100%;
+  margin: 10px auto;
+  display: block;
 
   border-radius: 3px;
 
@@ -96,11 +98,18 @@ h1.course-title {
   padding: 3px;
 }
 
-.tutorial pre code {
+.tutorial code.hljs {
   padding: 20px;
   font-size: 15px;
 
-  box-shadow: inset 0 0 4px 2px rgba(0, 0, 0, 0.7)
+  box-shadow: inset 0 0 4px 2px rgba(0, 0, 0, 0.7);
+}
+
+.tutorial .hljs-ln-numbers {
+  padding-right: 10px;
+  opacity: 0.7;
+
+  pointer-events: none;
 }
 
 .tutorial a {

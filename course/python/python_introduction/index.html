@@ -8,8 +8,6 @@
     <link rel="stylesheet" type="text/css" href="/tutorial_web/static/fonts.css" />
     <link rel="stylesheet" type="text/css" href="/tutorial_web/static/zenburn.min.css" />
 
-    <script defer onload="hljs.initHighlightingOnLoad();" src="/tutorial_web/static/highlight.min.js"></script>
-
     
   </head>
   <body>
@@ -76,6 +74,9 @@ print(&quot;Hello &quot; + name)
 </div>
 
     </div>
+
+    <script onload="hljs.initHighlighting()" src="/tutorial_web/static/highlight.min.js"></script>
+    <script onload="hljs.initLineNumbersOnLoad()" src="/tutorial_web/static/highlightjs-line-numbers.min.js"></script>
 
     <script src="/tutorial_web/static/main.js"></script>
   </body>

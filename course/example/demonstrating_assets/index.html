@@ -8,8 +8,6 @@
     <link rel="stylesheet" type="text/css" href="/tutorial_web/static/fonts.css" />
     <link rel="stylesheet" type="text/css" href="/tutorial_web/static/zenburn.min.css" />
 
-    <script defer onload="hljs.initHighlightingOnLoad();" src="/tutorial_web/static/highlight.min.js"></script>
-
     
   </head>
   <body>
@@ -30,8 +28,8 @@ What this means is that you can access any asset using the address <code>./asset
   
     <article class="tutorial " data-index="2">
   <h2 class="subtitle">2. Demonstration</h2>
-  <div class="content"><p>Here is a <a href="assets/dog.png">link to the asset</a>.
-Here is the image <img src="assets/dog.png" alt="This is the alt text for an image of a dog" />.</p>
+  <div class="content"><p>Here is a <a href="assets/dog.png">link to the asset</a>.</p>
+<p>Here is the image <img src="assets/dog.png" alt="This is the alt text for an image of a dog" />.</p>
 </div>
 </article>
   
@@ -39,6 +37,9 @@ Here is the image <img src="assets/dog.png" alt="This is the alt text for an ima
 </div>
 
     </div>
+
+    <script onload="hljs.initHighlighting()" src="/tutorial_web/static/highlight.min.js"></script>
+    <script onload="hljs.initLineNumbersOnLoad()" src="/tutorial_web/static/highlightjs-line-numbers.min.js"></script>
 
     <script src="/tutorial_web/static/main.js"></script>
   </body>

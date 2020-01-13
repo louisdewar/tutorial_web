@@ -131,8 +131,6 @@ If you edit a course which is listed here you must simply reload the webpage to 
 
     HttpServer::new(move || {
         App::new()
-            // enable logger
-            .wrap(middleware::Logger::default())
             .register_data(web::Data::new(app_state.clone()))
             .service(web::resource("/course/{topic}/{name}/index.html").to(render_course))
             .service(

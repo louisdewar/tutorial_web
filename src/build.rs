@@ -109,7 +109,7 @@ pub fn build_html<P: AsRef<Path>>(
     // ==Handle home page==
 
     let home = Home {
-        base_url: base_url.clone(),
+        base_url,
         course_groups: course_index,
     };
 

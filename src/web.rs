@@ -1,7 +1,7 @@
 use askama::Template;
 
 use actix_files as fs;
-use actix_web::{middleware, web, App, Either, HttpRequest, HttpResponse, HttpServer, Responder};
+use actix_web::{web, App, Either, HttpRequest, HttpResponse, HttpServer, Responder};
 
 use std::collections::HashMap;
 use std::path::PathBuf;
@@ -81,7 +81,7 @@ struct AppState {
     pub course_urls: HashMap<String, HashMap<String, PathBuf>>,
 }
 
-pub fn start_server(static_folder: String, course_folder: &str) -> std::io::Result<()> {
+pub fn start_server(port: u16, static_folder: String, course_folder: &str) -> std::io::Result<()> {
     use crate::common::{get_courses, CourseError};
     // Get courses in a non-strict way (if there is an error just skip)
     let course_urls = match get_courses(course_folder, false) {
@@ -120,12 +120,11 @@ pub fn start_server(static_folder: String, course_folder: &str) -> std::io::Resu
 If you edit a course which is listed here you must simply reload the webpage to see the new version."
 );
 
-    println!("Starting webserver at http://127.0.0.1:8000");
-    println!("This server is only for local testing, it is not designed to scale well although it should be fast");
-    println!("Use the build command to generate the production files and then serve them");
-
-    std::env::set_var("RUST_LOG", "actix_web=info");
-    env_logger::init();
+    println!("\n\nStarting webserver at http://127.0.0.1:{}", port);
+    println!("=========");
+    println!("This server is only for local testing, do not use it on a production system.");
+    println!("Use the build command to generate the production files and then serve them.");
+    println!("=========");
 
     let app_state = AppState { course_urls };
 
@@ -138,8 +137,8 @@ If you edit a course which is listed here you must simply reload the webpage to 
             )
             .service(fs::Files::new("/static", static_folder.clone()).show_files_listing())
     })
-    .bind("127.0.0.1:8000")
-    .expect("Can not bind to port 8000")
+    .bind(("127.0.0.1", port))
+    .expect("Unable to bind address to start web server")
     .run()
     .unwrap();
 

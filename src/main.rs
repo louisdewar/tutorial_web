@@ -43,7 +43,10 @@ fn main() -> std::io::Result<()> {
         let input = matches.value_of("input-dir").unwrap();
         let static_files = matches.value_of("static-dir").unwrap();
 
-        web::start_server(static_files.to_string(), input)?;
+        // Default port is 8000
+        let port = matches.value_of("port").map(|p| p.parse::<u16>().expect("Couldn't parse the port")).unwrap_or(8000);
+
+        web::start_server(port, static_files.to_string(), input)?;
     }
 
     Ok(())

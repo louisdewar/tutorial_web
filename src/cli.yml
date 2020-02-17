@@ -15,6 +15,11 @@ subcommands:
                 required: true
                 takes_value: true
                 help: The directory of the static files to be bundled under /static/
+            - port:
+                short: p
+                required: false
+                takes_value: true
+                help: The port that the test server runs on, if unspecified it uses the default (8000)
     - build:
         about: Builds the tutorial files into static HTML files ready for production
         args:

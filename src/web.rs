@@ -6,7 +6,52 @@ use actix_web::{web, App, Either, HttpRequest, HttpResponse, HttpServer, Respond
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-use crate::templates::Page;
+
+use crate::templates::{Home, Page, Course};
+
+fn render_home(state: web::Data<AppState>, _req: HttpRequest) -> impl Responder {
+    let mut course_groups: HashMap<String, HashMap<String, Course>> = HashMap::new();
+
+    for (course_group_name, course_group_map) in &state.course_urls {
+        for (course_name, course_path) in course_group_map {
+            let course_str = match std::fs::read_to_string(course_path.with_extension("yml")) {
+                Ok(str) => str,
+                Err(_) => return Either::B(format!("Couldn't open and read course file: {:?}", course_path)),
+            };
+
+            let course = match crate::parse::parse_course(&course_str) {
+                Ok(course) => course,
+                Err(_) => return Either::B(format!("Couldn't parse yaml file: {:?}", course_path)),
+            };
+
+            course_groups
+                .entry(course_group_name.clone())
+                .or_insert_with(HashMap::new)
+                .insert(course_name.to_string(), course);
+        }
+    }
+
+    let home = Home {
+        base_url: "".to_string(),
+        course_groups
+    };
+
+    match home.render() {
+        Ok(res) => Either::A(HttpResponse::Ok().body(res)),
+        Err(_) => Either::B("Couldn't render course into html".to_string()),
+    }
+}
+
+fn redirect_course(_state: web::Data<AppState>, req: HttpRequest) -> impl Responder {
+    use actix_web::http::header::LOCATION;
+
+    let topic = req.match_info().get("topic").unwrap();
+    let name = req.match_info().get("name").unwrap();
+
+    HttpResponse::PermanentRedirect()
+        .header(LOCATION, format!("/course/{}/{}/index.html", topic, name))
+        .finish()
+}
 
 fn render_course(state: web::Data<AppState>, req: HttpRequest) -> impl Responder {
     if let (Some(topic), Some(name)) = (req.match_info().get("topic"), req.match_info().get("name"))
@@ -120,7 +165,7 @@ pub fn start_server(port: u16, static_folder: String, course_folder: &str) -> st
 If you edit a course which is listed here you must simply reload the webpage to see the new version."
 );
 
-    println!("\n\nStarting webserver at http://127.0.0.1:{}", port);
+    println!("\n\nStarting webserver at http://127.0.0.1:{}/ (go to the root page to view the list of pages)", port);
     println!("=========");
     println!("This server is only for local testing, do not use it on a production system.");
     println!("Use the build command to generate the production files and then serve them.");
@@ -131,6 +176,8 @@ If you edit a course which is listed here you must simply reload the webpage to 
     HttpServer::new(move || {
         App::new()
             .register_data(web::Data::new(app_state.clone()))
+            .service(web::resource("/").to(render_home))
+            .service(web::resource("/course/{topic}/{name}").to(redirect_course))
             .service(web::resource("/course/{topic}/{name}/index.html").to(render_course))
             .service(
                 web::resource("/course/{topic}/{name}/assets/{asset_path:.*}").to(serve_assets),

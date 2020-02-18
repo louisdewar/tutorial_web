@@ -38,3 +38,18 @@ Run `./tutorial_web build --help` to see the options.
 The options are like the web-server except it also takes an output dir where all the files will be put.
 
 `./tutorial_web build -i COURSE_FOLDER -s static -o OUTPUT_DIR`
+
+## Warning on hosting in production
+
+Loading assets and linking to other tutorials requires **relative paths**,
+unfortunately this causes issues under certain hosting servers under certain
+scenarios. This happens because tutorials are hosted under `/{LANGUAGE}/{COURSE_NAME}/index.html`,
+quite often `index.html` may get omitted such that it becomes `/{LANGUAGE}/{COURSE_NAME}/`
+which is still fine.
+
+The problem occurs when that path becomes `/{LANGUAGE}/{COURSE_NAME}`
+(without the ending slash), since paths are now relative to the directory above
+which breaks the assumptions in those links.
+
+There may be more robust solutions in future but for now you should check to make
+sure your hosting server doesn't cause this problem.

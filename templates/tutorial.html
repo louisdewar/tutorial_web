@@ -1,4 +1,4 @@
 <article class="tutorial {% if tutorial.start_closed.unwrap_or(course.tutorial_settings.start_closed) -%}hide{% endif -%}" data-index="{{loop.index}}">
-  <h2 class="subtitle">{{loop.index}}. {{tutorial.subtitle}}</h2>
+  <h2 class="subtitle">{% if tutorial.show_number.unwrap_or(course.tutorial_settings.show_number) -%}{{loop.index}}. {% endif -%}{{tutorial.subtitle}}</h2>
   <div class="content">{{tutorial.content}}</div>
 </article>

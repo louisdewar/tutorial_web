@@ -6,8 +6,7 @@ use actix_web::{web, App, Either, HttpRequest, HttpResponse, HttpServer, Respond
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-
-use crate::templates::{Home, Page, Course};
+use crate::templates::{Course, Home, Page};
 
 fn render_home(state: web::Data<AppState>, _req: HttpRequest) -> impl Responder {
     let mut course_groups: HashMap<String, HashMap<String, Course>> = HashMap::new();
@@ -16,7 +15,12 @@ fn render_home(state: web::Data<AppState>, _req: HttpRequest) -> impl Responder 
         for (course_name, course_path) in course_group_map {
             let course_str = match std::fs::read_to_string(course_path.with_extension("yml")) {
                 Ok(str) => str,
-                Err(_) => return Either::B(format!("Couldn't open and read course file: {:?}", course_path)),
+                Err(_) => {
+                    return Either::B(format!(
+                        "Couldn't open and read course file: {:?}",
+                        course_path
+                    ))
+                }
             };
 
             let course = match crate::parse::parse_course(&course_str) {
@@ -33,7 +37,7 @@ fn render_home(state: web::Data<AppState>, _req: HttpRequest) -> impl Responder 
 
     let home = Home {
         base_url: "".to_string(),
-        course_groups
+        course_groups,
     };
 
     match home.render() {

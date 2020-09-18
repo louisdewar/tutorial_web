@@ -25,12 +25,15 @@ pub struct Course {
 pub struct CourseTutorialSettings {
     /// This defaults to false
     pub start_closed: bool,
+    /// This defaults to true
+    pub show_number: bool,
 }
 
 impl std::default::Default for CourseTutorialSettings {
     fn default() -> Self {
         CourseTutorialSettings {
             start_closed: false,
+            show_number: true,
         }
     }
 }
@@ -48,4 +51,6 @@ pub struct Tutorial {
     pub content: String,
     /// Defaults to the course wide settings
     pub start_closed: Option<bool>,
+    /// Defaults to the course wide settings
+    pub show_number: Option<bool>,
 }

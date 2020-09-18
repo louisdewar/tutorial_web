@@ -2,6 +2,9 @@ title: Demonstrating urls
 # Notice that the url for this file is different from the filename
 url: urls
 
+tutorial_settings:
+  show_number: false
+
 tutorials:
   - subtitle: How urls are processed on the server
     content: |
@@ -21,3 +24,19 @@ tutorials:
         - `assets/{all the files that used to be in the folder named with the same name as this file (excluding the .yml)}`
 
       Notice how [this link](assets/dog.png) magically works despite the different url name.
+  - subtitle: An aside about numbering
+    show_number: true
+    content: |
+      This course has the following global (within the course) tutorial settings:
+
+      ```
+      tutorial_settings:
+        show_number: false
+      ```
+
+      This causes the numbers to not be visible in any tutorial except this one has the setting (locally):
+
+      ```
+      show_number: true
+      ```
+

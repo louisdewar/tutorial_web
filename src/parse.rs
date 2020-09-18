@@ -130,7 +130,7 @@ pub fn parse_course(course: &str) -> Result<Course, ParseError> {
                 // Check for unrecognised keys
                 check_keys(
                     &hash,
-                    &["subtitle", "content", "start_closed"],
+                    &["subtitle", "content", "start_closed", "show_number"],
                     context
                 )?;
 
@@ -138,6 +138,7 @@ pub fn parse_course(course: &str) -> Result<Course, ParseError> {
                 let markdown = yaml_str!(require: hash, content, context);
 
                 let start_closed = yaml_bool!(hash, start_closed, context);
+                let show_number = yaml_bool!(hash, show_number, context);
 
                 // Parse markdown
                 let parser = pulldown_cmark::Parser::new(&markdown);
@@ -149,6 +150,7 @@ pub fn parse_course(course: &str) -> Result<Course, ParseError> {
                     subtitle,
                     content: html,
                     start_closed,
+                    show_number
                 })
             }),
         |iter| iter.collect(),
@@ -162,10 +164,12 @@ pub fn parse_course(course: &str) -> Result<Course, ParseError> {
             let mut settings = CourseTutorialSettings::default();
 
             // Check for unrecognised keys
-            check_keys(&settings_hash, &["start_closed"], context)?;
+            check_keys(&settings_hash, &["start_closed", "show_number"], context)?;
 
             settings.start_closed =
                 yaml_bool!(settings_hash, start_closed, context).unwrap_or(settings.start_closed);
+            settings.show_number =
+                yaml_bool!(settings_hash, show_number, context).unwrap_or(settings.show_number);
 
             settings
         }

@@ -13,3 +13,9 @@ tutorials:
       Here is a [link to the asset](assets/dog.png).
 
       Here is the image ![This is the alt text for an image of a dog](assets/dog.png).
+  - subtitle: An aside about hiding tutorial numbers
+    show_number: false
+    content: |
+      Unless you explicitally add a course wide setting to disable them, tutorial numbers are shown
+      by default.
+      This tutorial has a local setting of `show_number: false` hence it isn't visible.

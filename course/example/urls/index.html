@@ -18,7 +18,7 @@
   <section class="tutorials">
   
     <article class="tutorial " data-index="1">
-  <h2 class="subtitle">1. How urls are processed on the server</h2>
+  <h2 class="subtitle">How urls are processed on the server</h2>
   <div class="content"><p>On the <strong>server</strong> a scan is done at the start for all courses.
 It then saves the url field and serves the file under <code>{course_group}/{url}/index.html</code>.
 If the url field is changed after the server is running it will not be updated,
@@ -27,13 +27,13 @@ but if any content of a course is changed it will be updated on a browser refres
 </article>
   
     <article class="tutorial " data-index="2">
-  <h2 class="subtitle">2. How urls are processed during building</h2>
+  <h2 class="subtitle">How urls are processed during building</h2>
   <div class="content"><p>It is much like the server in the fact that the file name is irrelevent.</p>
 </div>
 </article>
   
     <article class="tutorial " data-index="3">
-  <h2 class="subtitle">3. How are assets handled?</h2>
+  <h2 class="subtitle">How are assets handled?</h2>
   <div class="content"><p>Since you only ever reference assets by relative paths it shouldn't matter,
 but if you want to know the folder structure is like this:
 <code>{url}</code>:</p>
@@ -42,6 +42,18 @@ but if you want to know the folder structure is like this:
 <li><code>assets/{all the files that used to be in the folder named with the same name as this file (excluding the .yml)}</code></li>
 </ul>
 <p>Notice how <a href="assets/dog.png">this link</a> magically works despite the different url name.</p>
+</div>
+</article>
+  
+    <article class="tutorial " data-index="4">
+  <h2 class="subtitle">4. An aside about numbering</h2>
+  <div class="content"><p>This course has the following global (within the course) tutorial settings:</p>
+<pre><code>tutorial_settings:
+  show_number: false
+</code></pre>
+<p>This causes the numbers to not be visible in any tutorial except this one has the setting (locally):</p>
+<pre><code>show_number: true
+</code></pre>
 </div>
 </article>
   
